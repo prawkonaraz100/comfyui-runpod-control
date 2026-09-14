@@ -34,10 +34,8 @@ if [[ -f .runner ]]; then
   echo "Runner is already configured in $RUNNER_DIR"
 else
   export RUNNER_ALLOW_RUNASROOT=1
-  ./config.sh --unattended --replace     --url "$REPO_URL"     --token "$TOKEN"     --name "runpod-a40-$(hostname)"     --labels "runpod,a40,comfyui"     --work "_work"
+  ./config.sh --unattended --replace     --url "$REPO_URL"     --token "$TOKEN"     --name "runpod-gpu-$(hostname)"     --labels "runpod,comfyui,gpu48"     --work "_work"
 fi
 
-# Make the runner return automatically after a Pod stop/start cycle.
 bash "$SCRIPT_DIR/install-runner-autostart.sh"
-
 exec bash "$SCRIPT_DIR/start-runner.sh"
