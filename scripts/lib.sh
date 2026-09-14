@@ -7,6 +7,7 @@ die() { log "ERROR: $*"; exit 1; }
 find_comfyui() {
   local candidates=(
     "${COMFYUI_DIR:-}"
+    "/workspace/runpod-slim/ComfyUI"
     "/workspace/ComfyUI"
     "/workspace/comfyui"
     "/ComfyUI"
@@ -22,6 +23,8 @@ find_comfyui() {
 find_python() {
   local comfy="$1"
   local candidates=(
+    "$comfy/.venv-cu128/bin/python"
+    "$comfy/.venv/bin/python"
     "$comfy/venv/bin/python"
     "/workspace/venv/bin/python"
     "/opt/venv/bin/python"
