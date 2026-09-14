@@ -1,5 +1,5 @@
 {
   "action": "provision",
-  "nonce": 4,
-  "note": "Install Wan2.2 Animate models, workflow and required ComfyUI custom nodes on RunPod."
+  "nonce": 5,
+  "note": "Retry Wan2.2 provisioning after making custom-node updates robust to missing origin/HEAD."
 }
