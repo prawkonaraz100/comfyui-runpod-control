@@ -1,0 +1,5 @@
+{
+  "action": "status",
+  "nonce": 0,
+  "note": "Requires RUNPOD_API_KEY and RUNPOD_POD_ID GitHub Actions secrets."
+}
