@@ -6,7 +6,7 @@ This repository is intentionally **public** and contains **no credentials**.
 
 ## Target
 
-- RunPod A40 48 GB
+- RunPod 48 GB-class GPU (currently RTX 6000 Ada 48 GB)
 - Current official RunPod ComfyUI template
 - ComfyUI on port 8188
 - Wan2.2 Animate / **MIX** character replacement
@@ -76,7 +76,7 @@ The bootstrapper:
 
 1. installs the current GitHub Actions runner under `/workspace/actions-runner`,
 2. registers it only for this repository,
-3. applies labels `runpod,a40,comfyui`,
+3. applies labels `runpod,comfyui,gpu48`,
 4. starts it,
 5. installs a tiny ComfyUI custom-node hook that automatically starts the runner whenever ComfyUI starts after a Pod stop/start cycle.
 
