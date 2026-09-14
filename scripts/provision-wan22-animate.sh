@@ -9,8 +9,17 @@ PYTHON="$(find_python "$COMFYUI_DIR")" || die "Could not locate Python used by C
 
 log "ComfyUI: $COMFYUI_DIR"
 log "Python: $PYTHON"
+
 if command -v nvidia-smi >/dev/null 2>&1; then
   nvidia-smi --query-gpu=name,memory.total,driver_version --format=csv,noheader
+fi
+
+FREE_KB="$(df -Pk "$COMFYUI_DIR" | awk 'NR==2 {print $4}')"
+FREE_GB=$((FREE_KB / 1024 / 1024))
+MIN_FREE_GB="${MIN_FREE_GB:-35}"
+log "Free storage on ComfyUI filesystem: ${FREE_GB} GiB"
+if (( FREE_GB < MIN_FREE_GB )); then
+  die "At least ${MIN_FREE_GB} GiB free is required before the first Wan2.2 Animate download. Increase RunPod storage/volume and retry."
 fi
 
 mkdir -p   "$COMFYUI_DIR/custom_nodes"   "$COMFYUI_DIR/models/diffusion_models"   "$COMFYUI_DIR/models/loras"   "$COMFYUI_DIR/models/text_encoders"   "$COMFYUI_DIR/models/clip_vision"   "$COMFYUI_DIR/models/vae"   "$COMFYUI_DIR/user/default/workflows"
