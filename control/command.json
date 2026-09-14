@@ -1,5 +1,5 @@
 {
-  "action": "restart_comfyui",
-  "nonce": 7,
-  "note": "Restart ComfyUI after successful Wan2.2 Animate provisioning."
+  "action": "verify",
+  "nonce": 8,
+  "note": "Verify Wan2.2 Animate stack after restarting ComfyUI."
 }
