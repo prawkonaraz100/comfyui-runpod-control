@@ -1,5 +1,5 @@
 {
   "action": "status",
-  "nonce": 2,
-  "note": "Initial status check after registering the RunPod self-hosted runner."
+  "nonce": 3,
+  "note": "Retry initial status check after fixing the GPU control workflow YAML."
 }
