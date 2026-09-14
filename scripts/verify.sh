@@ -18,9 +18,14 @@ info "UTC: $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
 info "ComfyUI: $COMFYUI_DIR"
 
 if command -v nvidia-smi >/dev/null 2>&1; then
-  GPU="$(nvidia-smi --query-gpu=name,memory.total --format=csv,noheader | head -n1)"
-  info "GPU: $GPU"
-  echo "$GPU" | grep -qi 'A40' && pass "A40 detected" || info "GPU is not A40; continuing"
+  GPU_NAME="$(nvidia-smi --query-gpu=name --format=csv,noheader | head -n1)"
+  GPU_MEM="$(nvidia-smi --query-gpu=memory.total --format=csv,noheader,nounits | head -n1)"
+  info "GPU: $GPU_NAME, ${GPU_MEM} MiB VRAM"
+  if (( GPU_MEM >= 45000 )); then
+    pass "GPU has at least ~48 GB class VRAM"
+  else
+    fail "GPU VRAM below expected 48 GB class: ${GPU_MEM} MiB"
+  fi
 else
   fail "nvidia-smi unavailable"
 fi
