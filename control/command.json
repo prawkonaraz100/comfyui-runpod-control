@@ -1,0 +1,5 @@
+{
+  "action": "status",
+  "nonce": 0,
+  "note": "Change nonce (and action if needed) to trigger the self-hosted runner workflow."
+}
