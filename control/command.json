@@ -1,5 +1,5 @@
 {
   "action": "status",
-  "nonce": 1,
-  "note": "Initial status check will run automatically when the self-hosted runner comes online."
+  "nonce": 2,
+  "note": "Initial status check after registering the RunPod self-hosted runner."
 }
