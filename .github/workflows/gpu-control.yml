@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       action:
-        description: Allowed operation to run on the RunPod A40
+        description: Allowed operation to run on the RunPod GPU
         required: true
         type: choice
         options:
@@ -22,13 +22,13 @@ permissions:
   contents: read
 
 concurrency:
-  group: runpod-a40-control
+  group: runpod-gpu-control
   cancel-in-progress: false
 
 jobs:
   control:
-    name: RunPod A40 control
-    runs-on: [self-hosted, runpod, a40, comfyui]
+    name: RunPod GPU control
+    runs-on: [self-hosted, runpod, comfyui, gpu48]
     timeout-minutes: 240
 
     steps:
@@ -82,7 +82,7 @@ PY
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: runpod-a40-${{ github.run_id }}-${{ github.run_attempt }}
+          name: runpod-gpu-${{ github.run_id }}-${{ github.run_attempt }}
           path: /workspace/reports/*-${{ github.run_id }}-${{ github.run_attempt }}.log
           if-no-files-found: warn
           retention-days: 7
