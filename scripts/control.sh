@@ -5,16 +5,16 @@ ACTION="${1:-}"
 
 case "$ACTION" in
   status)
-    exec "$ROOT/scripts/status.sh"
+    exec bash "$ROOT/scripts/status.sh"
     ;;
   verify)
-    exec "$ROOT/scripts/verify.sh"
+    exec bash "$ROOT/scripts/verify.sh"
     ;;
   provision)
-    exec "$ROOT/scripts/provision-wan22-animate.sh"
+    exec bash "$ROOT/scripts/provision-wan22-animate.sh"
     ;;
   restart_comfyui)
-    exec "$ROOT/scripts/restart-comfyui.sh"
+    exec bash "$ROOT/scripts/restart-comfyui.sh"
     ;;
   *)
     echo "Refusing unknown action: $ACTION" >&2
