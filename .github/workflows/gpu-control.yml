@@ -43,12 +43,7 @@ jobs:
           if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
             ACTION="${{ inputs.action }}"
           else
-            ACTION="$(python3 - <<'PY'
-import json
-with open("control/command.json", "r", encoding="utf-8") as f:
-    print(json.load(f)["action"])
-PY
-)"
+            ACTION="$(python3 -c 'import json; print(json.load(open("control/command.json", encoding="utf-8"))["action"])')"
           fi
 
           case "$ACTION" in
@@ -70,13 +65,15 @@ PY
         shell: bash
         run: |
           set -o pipefail
-          bash scripts/control.sh "${{ steps.command.outputs.action }}"             2>&1 | tee "/workspace/reports/gpu-control-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}.log"
+          bash scripts/control.sh "${{ steps.command.outputs.action }}" \
+            2>&1 | tee "/workspace/reports/gpu-control-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}.log"
 
       - name: Capture final status
         if: always()
         shell: bash
         run: |
-          bash scripts/status.sh             > "/workspace/reports/final-status-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}.log" 2>&1 || true
+          bash scripts/status.sh \
+            > "/workspace/reports/final-status-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}.log" 2>&1 || true
 
       - name: Upload diagnostics
         if: always()
