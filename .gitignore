@@ -1,0 +1,13 @@
+# Never commit credentials
+.env
+*.pem
+*.key
+*token*
+*secret*
+
+# Runtime
+logs/
+*.log
+report*.txt
+__pycache__/
+.DS_Store
