@@ -16,7 +16,17 @@ fi
 mkdir -p "$RUNNER_DIR"
 cd "$RUNNER_DIR"
 
-if [[ ! -x ./config.sh ]]; then
+runner_install_complete() {
+  [[ -x ./config.sh && -x ./run.sh && -x ./bin/Runner.Listener ]]
+}
+
+if ! runner_install_complete; then
+  echo "Runner installation is missing or incomplete; preparing a clean extraction."
+
+  # A failed extraction may leave partial files behind. Remove only runner package
+  # contents; this directory is dedicated to the GitHub Actions runner.
+  find . -mindepth 1 -maxdepth 1 -exec rm -rf -- {} +
+
   echo "Discovering latest GitHub Actions runner release..."
   VERSION="$(python3 - <<'PY'
 import json, urllib.request
@@ -25,9 +35,20 @@ with urllib.request.urlopen('https://api.github.com/repos/actions/runner/release
 print(tag.lstrip('v'))
 PY
 )"
-  ARCHIVE="actions-runner-linux-x64-${VERSION}.tar.gz"
-  curl -fL --retry 5 -o "$ARCHIVE"     "https://github.com/actions/runner/releases/download/v${VERSION}/${ARCHIVE}"
-  tar xzf "$ARCHIVE"
+  ARCHIVE="/tmp/actions-runner-linux-x64-${VERSION}.tar.gz"
+
+  curl -fL --retry 5 --retry-delay 2 -o "$ARCHIVE"     "https://github.com/actions/runner/releases/download/v${VERSION}/actions-runner-linux-x64-${VERSION}.tar.gz"
+
+  # RunPod /workspace storage can reject ownership changes even when the shell
+  # runs as root. GitHub runner archives carry uid/gid metadata, so explicitly
+  # keep ownership as the extracting user.
+  tar --no-same-owner --no-same-permissions -xzf "$ARCHIVE" -C "$RUNNER_DIR"
+  rm -f "$ARCHIVE"
+
+  runner_install_complete || {
+    echo "Runner extraction did not produce the expected binaries." >&2
+    exit 3
+  }
 fi
 
 if [[ -f .runner ]]; then
