@@ -4,6 +4,7 @@ set -Eeuo pipefail
 REPO_URL="https://github.com/prawkonaraz100/comfyui-runpod-control"
 RUNNER_DIR="${RUNNER_DIR:-/workspace/actions-runner}"
 TOKEN="${1:-${RUNNER_REGISTRATION_TOKEN:-}}"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 if [[ -z "$TOKEN" ]]; then
   echo "Usage: bash scripts/bootstrap-runner.sh <GITHUB_RUNNER_REGISTRATION_TOKEN>"
@@ -36,4 +37,7 @@ else
   ./config.sh --unattended --replace     --url "$REPO_URL"     --token "$TOKEN"     --name "runpod-a40-$(hostname)"     --labels "runpod,a40,comfyui"     --work "_work"
 fi
 
-exec bash "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/start-runner.sh"
+# Make the runner return automatically after a Pod stop/start cycle.
+bash "$SCRIPT_DIR/install-runner-autostart.sh"
+
+exec bash "$SCRIPT_DIR/start-runner.sh"
