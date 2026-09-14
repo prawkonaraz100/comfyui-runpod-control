@@ -1,5 +1,5 @@
 {
-  "action": "provision",
-  "nonce": 6,
-  "note": "Provision Wan2.2 Animate after repairing the shared shell library."
+  "action": "restart_comfyui",
+  "nonce": 7,
+  "note": "Restart ComfyUI after successful Wan2.2 Animate provisioning."
 }
