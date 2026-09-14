@@ -1,5 +1,5 @@
 {
   "action": "provision",
-  "nonce": 5,
-  "note": "Retry Wan2.2 provisioning after making custom-node updates robust to missing origin/HEAD."
+  "nonce": 6,
+  "note": "Provision Wan2.2 Animate after repairing the shared shell library."
 }
