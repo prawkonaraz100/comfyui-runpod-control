@@ -46,7 +46,8 @@ download_file() {
 
   log "Downloading: $dest"
   if command -v aria2c >/dev/null 2>&1; then
-    aria2c --console-log-level=warn --summary-interval=10 -x 8 -s 8 -c       --allow-overwrite=true -d "$(dirname "$dest")" -o "$(basename "$dest")" "$url"
+    aria2c --console-log-level=warn --summary-interval=10 -x 8 -s 8 -c \
+      --allow-overwrite=true -d "$(dirname "$dest")" -o "$(basename "$dest")" "$url"
   elif command -v wget >/dev/null 2>&1; then
     wget --progress=dot:giga -c -O "$dest" "$url"
   elif command -v curl >/dev/null 2>&1; then
@@ -77,16 +78,7 @@ clone_or_update() {
     fi
 
     if [[ -z "$branch" ]]; then
-      branch="$(git -C "$dest" for-each-ref --format='%(refname:short)' refs/remotes/origin \
-        | grep -v '^origin/HEAD
-install_requirements() {
-  local python="$1" dir="$2"
-  if [[ -f "$dir/requirements.txt" ]]; then
-    log "Installing Python requirements for $(basename "$dir")"
-    "$python" -m pip install --disable-pip-version-check -r "$dir/requirements.txt"
-  fi
-}
- | head -n 1 | sed 's#^origin/##')"
+      branch="$(git -C "$dest" for-each-ref --format='%(refname:short)' refs/remotes/origin | grep -v '^origin/HEAD$' | head -n 1 | sed 's#^origin/##')"
     fi
 
     [[ -n "$branch" ]] || die "Could not determine the default branch for $url"
