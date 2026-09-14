@@ -36,4 +36,4 @@ else
   ./config.sh --unattended --replace     --url "$REPO_URL"     --token "$TOKEN"     --name "runpod-a40-$(hostname)"     --labels "runpod,a40,comfyui"     --work "_work"
 fi
 
-exec "$(dirname "$0")/start-runner.sh"
+exec bash "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/start-runner.sh"
