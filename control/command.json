@@ -1,5 +1,5 @@
 {
-  "action": "status",
-  "nonce": 3,
-  "note": "Retry initial status check after fixing the GPU control workflow YAML."
+  "action": "provision",
+  "nonce": 4,
+  "note": "Install Wan2.2 Animate models, workflow and required ComfyUI custom nodes on RunPod."
 }
