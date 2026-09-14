@@ -61,8 +61,36 @@ clone_or_update() {
   local url="$1" dest="$2"
   if [[ -d "$dest/.git" ]]; then
     log "Updating $(basename "$dest")"
-    git -C "$dest" fetch --depth 1 origin
-    git -C "$dest" reset --hard origin/HEAD || git -C "$dest" pull --ff-only
+    git -C "$dest" fetch --prune --depth 1 origin
+
+    local branch=""
+    branch="$(git -C "$dest" symbolic-ref --quiet --short refs/remotes/origin/HEAD 2>/dev/null | sed 's#^origin/##' || true)"
+
+    if [[ -z "$branch" ]]; then
+      local candidate
+      for candidate in main master; do
+        if git -C "$dest" show-ref --verify --quiet "refs/remotes/origin/$candidate"; then
+          branch="$candidate"
+          break
+        fi
+      done
+    fi
+
+    if [[ -z "$branch" ]]; then
+      branch="$(git -C "$dest" for-each-ref --format='%(refname:short)' refs/remotes/origin \
+        | grep -v '^origin/HEAD
+install_requirements() {
+  local python="$1" dir="$2"
+  if [[ -f "$dir/requirements.txt" ]]; then
+    log "Installing Python requirements for $(basename "$dir")"
+    "$python" -m pip install --disable-pip-version-check -r "$dir/requirements.txt"
+  fi
+}
+ | head -n 1 | sed 's#^origin/##')"
+    fi
+
+    [[ -n "$branch" ]] || die "Could not determine the default branch for $url"
+    git -C "$dest" checkout -B "$branch" "origin/$branch"
   else
     log "Cloning $url"
     rm -rf "$dest"
