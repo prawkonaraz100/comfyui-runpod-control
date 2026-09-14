@@ -1,0 +1,88 @@
+name: GPU control
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: Allowed operation to run on the RunPod A40
+        required: true
+        type: choice
+        options:
+          - status
+          - verify
+          - provision
+          - restart_comfyui
+  push:
+    branches:
+      - main
+    paths:
+      - control/command.json
+
+permissions:
+  contents: read
+
+concurrency:
+  group: runpod-a40-control
+  cancel-in-progress: false
+
+jobs:
+  control:
+    name: RunPod A40 control
+    runs-on: [self-hosted, runpod, a40, comfyui]
+    timeout-minutes: 240
+
+    steps:
+      - name: Checkout control repository
+        uses: actions/checkout@v4
+
+      - name: Resolve allowlisted action
+        id: command
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            ACTION="${{ inputs.action }}"
+          else
+            ACTION="$(python3 - <<'PY'
+import json
+with open("control/command.json", "r", encoding="utf-8") as f:
+    print(json.load(f)["action"])
+PY
+)"
+          fi
+
+          case "$ACTION" in
+            status|verify|provision|restart_comfyui) ;;
+            *)
+              echo "Refusing action outside allowlist: $ACTION" >&2
+              exit 64
+              ;;
+          esac
+
+          echo "action=$ACTION" >> "$GITHUB_OUTPUT"
+          echo "Resolved action: $ACTION"
+
+      - name: Prepare report directory
+        shell: bash
+        run: mkdir -p /workspace/reports
+
+      - name: Execute control action
+        shell: bash
+        run: |
+          set -o pipefail
+          bash scripts/control.sh "${{ steps.command.outputs.action }}"             2>&1 | tee "/workspace/reports/gpu-control-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}.log"
+
+      - name: Capture final status
+        if: always()
+        shell: bash
+        run: |
+          bash scripts/status.sh             > "/workspace/reports/final-status-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}.log" 2>&1 || true
+
+      - name: Upload diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: runpod-a40-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /workspace/reports/*-${{ github.run_id }}-${{ github.run_attempt }}.log
+          if-no-files-found: warn
+          retention-days: 7
