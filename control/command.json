@@ -1,5 +1,5 @@
 {
-  "action": "verify",
-  "nonce": 8,
-  "note": "Verify Wan2.2 Animate stack after restarting ComfyUI."
+  "action": "status",
+  "nonce": 9,
+  "note": "Check self-hosted RunPod GPU runner before welcome animation."
 }
