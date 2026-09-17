@@ -1,0 +1,12 @@
+{
+  "request_id": "welcome-001",
+  "engine": "Wan2.2-TI2V-5B",
+  "source": "assets/welcome-input.jpg",
+  "output": "welcome-wan22.mp4",
+  "size": "1280*704",
+  "frames": 81,
+  "steps": 30,
+  "fps": 24,
+  "seed": 20260917,
+  "intent": "Preserve the original illustration and Polish text; add subtle welcoming hand waves, blinking, breathing, slight parallax and a slow push-in."
+}
