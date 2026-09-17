@@ -1,0 +1,72 @@
+name: Render welcome animation
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - render/request.json
+
+permissions:
+  contents: read
+
+concurrency:
+  group: runpod-welcome-render
+  cancel-in-progress: false
+
+jobs:
+  render:
+    name: Wan2.2 welcome render on RunPod GPU
+    runs-on: [self-hosted, runpod, gpu48]
+    timeout-minutes: 240
+    env:
+      WAN_ENGINE_DIR: /workspace/wan2.2
+      WAN_MODEL_DIR: /workspace/models/Wan2.2-TI2V-5B
+      WAN_VENV_DIR: /workspace/venvs/wan22
+      HF_HOME: /workspace/huggingface
+      WAN_ENGINE_COMMIT: 42bf4cfaa384bc21833865abc2f9e6c0e67233dc
+
+    steps:
+      - name: Checkout control repository
+        uses: actions/checkout@v4
+
+      - name: GPU preflight
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          echo "Runner: $RUNNER_NAME"
+          nvidia-smi
+          python3 --version
+          df -h /workspace || df -h /
+          free -h || true
+
+      - name: Prepare Wan2.2 runtime
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          bash scripts/render-welcome-wan22.sh prepare
+
+      - name: Render welcome animation
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          bash scripts/render-welcome-wan22.sh render
+
+      - name: Inspect result
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          ls -lh artifacts/welcome-wan22.mp4
+          if command -v ffprobe >/dev/null 2>&1; then
+            ffprobe -v error -show_entries format=duration,size -show_entries stream=codec_name,width,height,r_frame_rate -of default=noprint_wrappers=1 artifacts/welcome-wan22.mp4
+          fi
+          sha256sum artifacts/welcome-wan22.mp4
+
+      - name: Upload rendered video
+        uses: actions/upload-artifact@v4
+        with:
+          name: welcome-wan22-${{ github.run_id }}-${{ github.run_attempt }}
+          path: artifacts/welcome-wan22.mp4
+          if-no-files-found: error
+          retention-days: 14
