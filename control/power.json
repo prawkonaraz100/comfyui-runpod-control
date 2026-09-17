@@ -1,5 +1,5 @@
 {
-  "action": "status",
-  "nonce": 1,
-  "note": "Requires RUNPOD_API_KEY and RUNPOD_POD_ID GitHub Actions secrets."
+  "action": "start",
+  "nonce": 2,
+  "note": "Start RunPod for welcome image-to-video generation."
 }
