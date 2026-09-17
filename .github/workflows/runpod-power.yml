@@ -29,28 +29,21 @@ jobs:
   power:
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    env:
-      RUNPOD_API_KEY: ${{ secrets.RUNPOD_API_KEY }}
-      RUNPOD_POD_ID: ${{ secrets.RUNPOD_POD_ID }}
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Resolve command
+      - name: Resolve action
         id: command
         shell: bash
+        env:
+          DISPATCH_ACTION: ${{ inputs.action }}
         run: |
           set -Eeuo pipefail
           if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-            ACTION="${{ inputs.action }}"
+            ACTION="$DISPATCH_ACTION"
           else
-            ACTION="$(python3 - <<'PY'
-import json
-with open("control/power.json", "r", encoding="utf-8") as f:
-    print(json.load(f)["action"])
-PY
-)"
+            ACTION="$(python3 -c 'import json; print(json.load(open("control/power.json", encoding="utf-8"))["action"])')"
           fi
           case "$ACTION" in
             status|start|stop|restart) ;;
@@ -58,45 +51,25 @@ PY
           esac
           echo "action=$ACTION" >> "$GITHUB_OUTPUT"
 
-      - name: Validate secrets
-        shell: bash
-        run: |
-          set -Eeuo pipefail
-          [[ -n "$RUNPOD_API_KEY" ]] || { echo "Missing RUNPOD_API_KEY repository secret"; exit 2; }
-          [[ -n "$RUNPOD_POD_ID" ]] || { echo "Missing RUNPOD_POD_ID repository secret"; exit 2; }
-
       - name: Call RunPod REST API
         shell: bash
+        env:
+          RUNPOD_API_KEY: ${{ secrets.RUNPOD_API_KEY }}
+          RUNPOD_POD_ID: ${{ secrets.RUNPOD_POD_ID }}
+          ACTION: ${{ steps.command.outputs.action }}
         run: |
           set -Eeuo pipefail
-          ACTION="${{ steps.command.outputs.action }}"
+          [[ -n "$RUNPOD_API_KEY" ]] || { echo "Missing RUNPOD_API_KEY" >&2; exit 2; }
+          [[ -n "$RUNPOD_POD_ID" ]] || { echo "Missing RUNPOD_POD_ID" >&2; exit 2; }
           BASE="https://rest.runpod.io/v1/pods/$RUNPOD_POD_ID"
-
           case "$ACTION" in
-            status)
-              METHOD="GET"
-              URL="$BASE"
-              ;;
-            start)
-              METHOD="POST"
-              URL="$BASE/start"
-              ;;
-            stop)
-              METHOD="POST"
-              URL="$BASE/stop"
-              ;;
-            restart)
-              METHOD="POST"
-              URL="$BASE/restart"
-              ;;
+            status) METHOD=GET; URL="$BASE" ;;
+            start) METHOD=POST; URL="$BASE/start" ;;
+            stop) METHOD=POST; URL="$BASE/stop" ;;
+            restart) METHOD=POST; URL="$BASE/restart" ;;
           esac
-
           echo "RunPod action: $ACTION"
-          echo "Pod ID: ${RUNPOD_POD_ID:0:4}... (redacted)"
-          RESPONSE="$(curl -fsS --retry 3 --retry-delay 2             -X "$METHOD"             -H "Authorization: Bearer $RUNPOD_API_KEY"             -H "Accept: application/json"             "$URL")"
-
+          RESPONSE="$(curl -fsS --retry 3 --retry-delay 2 -X "$METHOD" -H "Authorization: Bearer $RUNPOD_API_KEY" -H "Accept: application/json" "$URL")"
           if [[ -n "$RESPONSE" ]]; then
-            python3 -c 'import json,sys; print(json.dumps(json.load(sys.stdin), indent=2))' <<<"$RESPONSE"               || printf '%s\n' "$RESPONSE"
-          else
-            echo "RunPod API returned success with an empty body."
+            python3 -c 'import json,sys; print(json.dumps(json.load(sys.stdin), indent=2))' <<<"$RESPONSE" || printf '%s\n' "$RESPONSE"
           fi
