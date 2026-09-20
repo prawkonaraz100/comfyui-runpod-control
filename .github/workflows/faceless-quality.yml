@@ -9,12 +9,14 @@ on:
       - "faceless/**"
       - "scripts/faceless_validate.py"
       - "tests/test_faceless_contract.py"
+      - "docs/FACELESS_WORKFLOW_V1.md"
       - ".github/workflows/faceless-quality.yml"
   pull_request:
     paths:
       - "faceless/**"
       - "scripts/faceless_validate.py"
       - "tests/test_faceless_contract.py"
+      - "docs/FACELESS_WORKFLOW_V1.md"
       - ".github/workflows/faceless-quality.yml"
 
 permissions:
