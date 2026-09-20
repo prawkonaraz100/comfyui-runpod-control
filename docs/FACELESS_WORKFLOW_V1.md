@@ -1,0 +1,155 @@
+# Faceless Engine V1 — workflow parity target
+
+## Goal
+
+V1 reproduces the **workflow shown in the reference video** before we add our own improvements.
+
+Reference:
+- YouTube: `https://www.youtube.com/watch?v=EChXCPolIDQ`
+- Workflow demonstrated with Claude Code + Higgsfield.
+
+Our implementation keeps the same user-facing production flow, but uses:
+- **ChatGPT in the normal ChatGPT product** as the director/orchestrator,
+- **no OpenAI API usage**,
+- GitHub as the project/control plane,
+- GitHub Actions + RunPod for generation/render execution.
+
+V1 is a parity milestone, not a redesign.
+
+## Target user flow
+
+### 1. Research a reference channel / topic
+
+The user can give ChatGPT a channel, video, niche, or topic.
+
+ChatGPT researches it and extracts:
+- recurring topic patterns,
+- title patterns,
+- pacing / storytelling patterns,
+- candidate topics.
+
+Output: a proposed topic and direction before generation.
+
+### 2. Generate a first style frame
+
+Before generating a full video, create **one representative still image** for the proposed visual style.
+
+The user can:
+- approve it,
+- reject it,
+- request a style correction.
+
+No full-video generation starts until the style direction is accepted.
+
+### 3. Lock channel voice / tone
+
+Store the channel's narration style / tone as a reusable project asset.
+
+The narration style should persist across future episodes for that channel/project.
+
+### 4. Build the full production proposal
+
+Before spending GPU time on the full render, ChatGPT presents a concrete proposal containing at least:
+- researched topic,
+- title direction,
+- locked visual style,
+- voice / narration style,
+- pacing,
+- overall scene direction.
+
+The user can approve or change the proposal.
+
+### 5. Generate the faceless video end-to-end
+
+After approval, the engine executes the production automatically:
+
+```text
+script
+→ scene breakdown
+→ one visual beat per scene
+→ scene image / asset generation
+→ image-to-video / scene animation
+→ narration
+→ background audio where applicable
+→ timeline assembly
+→ final video
+```
+
+The user should not have to manually switch between generation tools.
+
+### 6. Keep every generated asset organized
+
+Each project keeps its own folder / manifest with:
+- script,
+- scene plan,
+- prompts,
+- generated stills,
+- generated clips,
+- voice-over,
+- final render,
+- metadata needed to reproduce or repair the video.
+
+### 7. Scene-level repair
+
+If one scene is wrong, the user can identify that scene or provide a screenshot/frame and ask for a change.
+
+The engine must:
+- regenerate **only that scene**,
+- keep all unaffected scenes unchanged,
+- preserve the voice-over timing where possible,
+- rebuild the final timeline with the replacement clip.
+
+A bad scene must not require regenerating the whole video.
+
+### 8. Reuse the channel identity for new episodes
+
+Once a channel/project has a locked:
+- visual identity,
+- narration voice/tone,
+- format,
+- aspect ratio,
+- pacing rules,
+
+a new episode should require only a new topic/request unless the user explicitly changes those settings.
+
+### 9. Batch mode comes after single-video parity
+
+The reference workflow can run multiple topics through the same production pipeline.
+
+For V1, single-video production and repair must work reliably first.
+
+Batch production is only enabled after the single-video path is verified.
+
+## Explicit V1 non-goals
+
+Do **not** improve or redesign the workflow yet.
+
+Until parity is reached, V1 does not add:
+- a custom studio UI,
+- a new creative workflow,
+- autonomous publishing,
+- automatic thumbnails beyond what is required for parity testing,
+- multiple competing render backends exposed to the user,
+- complex optimization logic,
+- unrelated PrawkoNaRaz product integration.
+
+Those can come after the reference workflow is reproduced and verified.
+
+## Definition of Done
+
+V1 is complete only when, from a normal ChatGPT conversation, we can demonstrate this sequence:
+
+1. User provides a topic or reference.
+2. ChatGPT researches and proposes a direction.
+3. ChatGPT creates a single style frame.
+4. User approves or modifies the style.
+5. ChatGPT presents the final production proposal.
+6. User approves generation.
+7. GitHub Actions / RunPod generate the scenes and final video.
+8. The final MP4 is available as a build artifact and can be returned to the user.
+9. User requests a change to one scene.
+10. Only that scene is regenerated.
+11. The final MP4 is rebuilt with the replacement scene.
+12. A second episode can reuse the same channel style and voice without redefining them.
+
+Only after all twelve points are demonstrated do we start improving the workflow.
