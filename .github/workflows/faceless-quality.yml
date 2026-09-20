@@ -45,5 +45,8 @@ jobs:
       - name: Run unit tests
         run: python -m unittest discover -s tests -p "test_faceless_*.py" -v
 
-      - name: Validate demo project
+      - name: Validate proposal demo
         run: python scripts/faceless_validate.py faceless/projects/demo
+
+      - name: Validate style-frame demo
+        run: python scripts/faceless_validate.py faceless/projects/style-frame-demo

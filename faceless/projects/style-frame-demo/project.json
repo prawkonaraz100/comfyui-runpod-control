@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "project_id": "style-frame-episode-001",
+  "channel_id": "style-frame-demo",
+  "topic": "Style-frame checkpoint demonstration",
+  "reference_urls": [
+    "https://www.youtube.com/watch?v=EChXCPolIDQ"
+  ],
+  "workflow_stage": "style_frame",
+  "approvals": {
+    "style_frame": false,
+    "production_proposal": false
+  },
+  "render": {
+    "status": "not_started",
+    "final_artifact": null
+  }
+}

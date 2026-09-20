@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "request_type": "style_frame",
+  "project_id": "style-frame-episode-001",
+  "status": "pending",
+  "prompt": "Clean editorial faceless explainer with restrained geometry and consistent visual language. Create one representative frame only.",
+  "aspect_ratio": "9:16",
+  "output_path": "assets/style-frame.png"
+}

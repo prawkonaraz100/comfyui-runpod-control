@@ -11,6 +11,7 @@ SLUG_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 SCENE_ID_RE = re.compile(r"^scene-(\d{3})$")
 VALID_STAGES = {"research", "style_frame", "proposal", "generation", "ready", "repair"}
 VALID_STYLE_STATUSES = {"pending", "approved", "rejected"}
+VALID_STYLE_REQUEST_STATUSES = {"pending", "generated", "approved", "rejected"}
 VALID_SCENE_STATUSES = {"planned", "generating", "generated", "approved", "rejected"}
 VALID_RENDER_STATUSES = {"not_started", "rendering", "ready", "failed"}
 
@@ -138,6 +139,39 @@ def validate_project(project: dict[str, Any], channel: dict[str, Any]) -> None:
         raise ValidationError("ready render requires project.render.final_artifact")
 
 
+def validate_style_frame_request(
+    request: dict[str, Any], project: dict[str, Any], channel: dict[str, Any]
+) -> None:
+    if require(request, "schema_version", int, "style-frame-request") != 1:
+        raise ValidationError("style-frame-request.schema_version must be 1")
+
+    if require(request, "request_type", str, "style-frame-request") != "style_frame":
+        raise ValidationError("style-frame-request.request_type must be 'style_frame'")
+
+    if require(request, "project_id", str, "style-frame-request") != project["project_id"]:
+        raise ValidationError("style-frame-request.project_id must match project.project_id")
+
+    status = require(request, "status", str, "style-frame-request")
+    if status not in VALID_STYLE_REQUEST_STATUSES:
+        raise ValidationError(
+            f"style-frame-request.status must be one of {sorted(VALID_STYLE_REQUEST_STATUSES)}"
+        )
+
+    prompt = require(request, "prompt", str, "style-frame-request")
+    if not prompt.strip():
+        raise ValidationError("style-frame-request.prompt must be non-empty")
+
+    ratio = require(request, "aspect_ratio", str, "style-frame-request")
+    if ratio != channel["defaults"]["aspect_ratio"]:
+        raise ValidationError(
+            "style-frame-request.aspect_ratio must match channel.defaults.aspect_ratio"
+        )
+
+    output_path = require(request, "output_path", str, "style-frame-request")
+    if not output_path.strip():
+        raise ValidationError("style-frame-request.output_path must be non-empty")
+
+
 def validate_scenes(
     scenes_doc: dict[str, Any], project: dict[str, Any], channel: dict[str, Any]
 ) -> None:
@@ -149,7 +183,11 @@ def validate_scenes(
 
     scenes = require(scenes_doc, "scenes", list, "scenes")
     if not scenes:
-        raise ValidationError("scenes.scenes must contain at least one scene")
+        if project["workflow_stage"] in {"research", "style_frame"}:
+            return
+        raise ValidationError(
+            "scenes.scenes must contain at least one scene from proposal stage onward"
+        )
 
     expected_order = 1
     total_duration = 0.0
@@ -176,8 +214,12 @@ def validate_scenes(
             raise ValidationError(f"{where}.duration_seconds must be a number > 0")
         total_duration += float(duration)
 
-        require(scene, "narration", str, where)
-        require(scene, "visual_prompt", str, where)
+        narration = require(scene, "narration", str, where)
+        if not narration.strip():
+            raise ValidationError(f"{where}.narration must be non-empty")
+        visual_prompt = require(scene, "visual_prompt", str, where)
+        if not visual_prompt.strip():
+            raise ValidationError(f"{where}.visual_prompt must be non-empty")
 
         status = require(scene, "status", str, where)
         if status not in VALID_SCENE_STATUSES:
@@ -214,6 +256,14 @@ def validate_project_dir(project_dir: Path) -> None:
 
     validate_channel(channel)
     validate_project(project, channel)
+
+    request_path = project_dir / "style-frame-request.json"
+    if project["workflow_stage"] == "style_frame":
+        request = load_json(request_path)
+        validate_style_frame_request(request, project, channel)
+    elif request_path.exists():
+        validate_style_frame_request(load_json(request_path), project, channel)
+
     validate_scenes(scenes, project, channel)
 
 
@@ -230,7 +280,10 @@ def main(argv: list[str]) -> int:
         return 1
 
     scenes = load_json(project_dir / "scenes.json")["scenes"]
-    print(f"PASS: {project_dir} ({len(scenes)} scenes)")
+    print(
+        f"PASS: {project_dir} "
+        f"(stage={load_json(project_dir / 'project.json')['workflow_stage']}, scenes={len(scenes)})"
+    )
     return 0
 
 
