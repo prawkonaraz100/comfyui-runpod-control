@@ -1,0 +1,51 @@
+name: Faceless GPU Preflight
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/chatgpt-faceless-engine-v1
+    paths:
+      - "faceless/control/gpu-probe.json"
+      - "scripts/faceless-gpu-preflight.sh"
+      - ".github/workflows/faceless-gpu-preflight.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: faceless-gpu-preflight
+  cancel-in-progress: false
+
+jobs:
+  probe:
+    name: Probe RunPod faceless runtime
+    runs-on: [self-hosted, runpod, comfyui, gpu48]
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate allowlisted request
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          ACTION="$(python3 -c 'import json; print(json.load(open("faceless/control/gpu-probe.json", encoding="utf-8"))["action"])')"
+          [[ "$ACTION" == "probe" ]] || {
+            echo "Refusing action outside allowlist: $ACTION" >&2
+            exit 64
+          }
+
+      - name: Collect GPU and ComfyUI capability report
+        shell: bash
+        run: bash scripts/faceless-gpu-preflight.sh artifacts/gpu-preflight
+
+      - name: Upload preflight report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: faceless-gpu-preflight-${{ github.run_id }}-${{ github.run_attempt }}
+          path: artifacts/gpu-preflight/
+          if-no-files-found: error
+          retention-days: 7
