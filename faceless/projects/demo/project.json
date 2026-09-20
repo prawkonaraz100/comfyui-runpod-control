@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "project_id": "demo-episode-001",
+  "channel_id": "demo-faceless",
+  "topic": "Demonstration episode for the Faceless Engine V1 contract",
+  "reference_urls": [
+    "https://www.youtube.com/watch?v=EChXCPolIDQ"
+  ],
+  "workflow_stage": "proposal",
+  "approvals": {
+    "style_frame": true,
+    "production_proposal": false
+  },
+  "render": {
+    "status": "not_started",
+    "final_artifact": null
+  }
+}

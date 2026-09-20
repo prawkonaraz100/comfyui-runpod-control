@@ -1,0 +1,49 @@
+name: Faceless Quality Gate
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/chatgpt-faceless-engine-v1
+    paths:
+      - "faceless/**"
+      - "scripts/faceless_validate.py"
+      - "tests/test_faceless_contract.py"
+      - ".github/workflows/faceless-quality.yml"
+  pull_request:
+    paths:
+      - "faceless/**"
+      - "scripts/faceless_validate.py"
+      - "tests/test_faceless_contract.py"
+      - ".github/workflows/faceless-quality.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: faceless-quality-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  contract:
+    name: Contract and tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Compile Python
+        run: python -m compileall -q scripts tests
+
+      - name: Run unit tests
+        run: python -m unittest discover -s tests -p "test_faceless_*.py" -v
+
+      - name: Validate demo project
+        run: python scripts/faceless_validate.py faceless/projects/demo

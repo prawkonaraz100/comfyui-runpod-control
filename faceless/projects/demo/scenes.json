@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "project_id": "demo-episode-001",
+  "scenes": [
+    {
+      "scene_id": "scene-001",
+      "order": 1,
+      "duration_seconds": 5,
+      "narration": "Hook placeholder.",
+      "visual_prompt": "Opening visual beat placeholder.",
+      "status": "planned",
+      "assets": {
+        "still": null,
+        "clip": null
+      }
+    },
+    {
+      "scene_id": "scene-002",
+      "order": 2,
+      "duration_seconds": 5,
+      "narration": "Context placeholder.",
+      "visual_prompt": "Context visual beat placeholder.",
+      "status": "planned",
+      "assets": {
+        "still": null,
+        "clip": null
+      }
+    },
+    {
+      "scene_id": "scene-003",
+      "order": 3,
+      "duration_seconds": 5,
+      "narration": "Development placeholder.",
+      "visual_prompt": "Development visual beat placeholder.",
+      "status": "planned",
+      "assets": {
+        "still": null,
+        "clip": null
+      }
+    },
+    {
+      "scene_id": "scene-004",
+      "order": 4,
+      "duration_seconds": 5,
+      "narration": "Example placeholder.",
+      "visual_prompt": "Example visual beat placeholder.",
+      "status": "planned",
+      "assets": {
+        "still": null,
+        "clip": null
+      }
+    },
+    {
+      "scene_id": "scene-005",
+      "order": 5,
+      "duration_seconds": 5,
+      "narration": "Resolution placeholder.",
+      "visual_prompt": "Resolution visual beat placeholder.",
+      "status": "planned",
+      "assets": {
+        "still": null,
+        "clip": null
+      }
+    },
+    {
+      "scene_id": "scene-006",
+      "order": 6,
+      "duration_seconds": 5,
+      "narration": "Closing placeholder.",
+      "visual_prompt": "Closing visual beat placeholder.",
+      "status": "planned",
+      "assets": {
+        "still": null,
+        "clip": null
+      }
+    }
+  ]
+}
