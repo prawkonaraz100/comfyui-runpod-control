@@ -7,8 +7,12 @@ on:
       - feature/chatgpt-faceless-engine-v1
     paths:
       - "faceless/**"
+      - ".agents/skills/faceless-video-director/**"
+      - ".agents/skills/faceless-video-director/**"
       - "scripts/faceless_validate.py"
       - "tests/test_faceless_contract.py"
+      - "tests/test_faceless_skill.py"
+      - "tests/test_faceless_skill.py"
       - "docs/FACELESS_WORKFLOW_V1.md"
       - ".github/workflows/faceless-quality.yml"
   pull_request:
