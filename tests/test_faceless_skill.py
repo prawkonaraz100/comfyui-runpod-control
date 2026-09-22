@@ -44,6 +44,14 @@ class FacelessVideoDirectorSkillTests(unittest.TestCase):
         for phrase in required_phrases:
             self.assertIn(phrase, text)
 
+    def test_skill_documents_exact_continuity_contract(self) -> None:
+        text = SKILL.read_text(encoding="utf-8")
+        self.assertIn('From `proposal` onward, `continuity.json` is required', text)
+        self.assertIn('"character_id": "driver-01"', text)
+        self.assertIn('"style_id": "channel-style-v1"', text)
+        self.assertNotIn("driver_01", text)
+        self.assertNotIn("channel_style_v1", text)
+
     def test_skill_preserves_script_writer_source(self) -> None:
         text = REFERENCE.read_text(encoding="utf-8")
         self.assertIn("# Faceless Script Writer", text)

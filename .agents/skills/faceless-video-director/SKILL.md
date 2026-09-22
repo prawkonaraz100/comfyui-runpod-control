@@ -115,8 +115,8 @@ After style approval, create or select a canonical character asset.
 Minimum character lock:
 
 ```yaml
-character_id: driver_01
-canonical_reference: assets/characters/driver_01.png
+character_id: driver-01
+canonical_reference: assets/characters/driver-01.png
 faceless: true
 locked_traits:
   hair:
@@ -155,7 +155,7 @@ Create a style manifest that points to the approved style-frame asset.
 Minimum style lock:
 
 ```yaml
-style_id: channel_style_v1
+style_id: channel-style-v1
 canonical_reference: assets/style/style-frame-v1.png
 palette:
 line_language:
@@ -183,10 +183,10 @@ Minimum scene shape:
   "duration_seconds": 5.0,
   "narration": "Po zdanym egzaminie wynik trafia do systemu.",
   "visual_goal": "Show the exam result moving into the official digital process.",
-  "character_id": "driver_01",
-  "style_id": "channel_style_v1",
+  "character_id": "driver-01",
+  "style_id": "channel-style-v1",
   "references": {
-    "character": "assets/characters/driver_01.png",
+    "character": "assets/characters/driver-01.png",
     "style": "assets/style/style-frame-v1.png"
   },
   "locked_traits": [
@@ -295,25 +295,54 @@ Never regenerate the full film merely because one scene failed.
 
 ## Continuity file
 
-For recurring projects, maintain a continuity manifest such as `continuity.json` or the repository's equivalent.
+From `proposal` onward, `continuity.json` is required and both locks must have `status: "approved"`. The validator treats the manifest as the canonical source for scene identity/style references.
 
-Recommended structure:
+Current schema:
 
 ```json
 {
   "schema_version": 1,
+  "project_id": "demo-episode-001",
   "character_lock": {
-    "character_id": "driver_01",
-    "canonical_reference": "assets/characters/driver_01.png",
-    "locked_traits": {}
+    "status": "approved",
+    "character_id": "driver-01",
+    "canonical_reference": "assets/characters/driver-01.png",
+    "character_sheet": "assets/characters/driver-01-sheet.png",
+    "locked_traits": {
+      "faceless": true,
+      "hair": "short wavy brown hair",
+      "outerwear": "dark grey overshirt jacket"
+    },
+    "forbidden_changes": [
+      "facial features",
+      "hair restyle",
+      "wardrobe replacement",
+      "body-proportion drift"
+    ]
   },
   "style_lock": {
-    "style_id": "channel_style_v1",
+    "status": "approved",
+    "style_id": "channel-style-v1",
     "canonical_reference": "assets/style/style-frame-v1.png",
-    "rules": {}
+    "rules": {
+      "palette": "approved channel palette",
+      "rendering": "approved illustration language"
+    },
+    "forbidden_changes": [
+      "different illustration language",
+      "unapproved palette shift"
+    ]
   }
 }
 ```
+
+Rules enforced by `scripts/faceless_validate.py`:
+- `project_id` must match `project.json`,
+- lock IDs are lowercase kebab-case,
+- approved locks require non-empty canonical references,
+- the approved style reference must exactly match `channel.visual_identity.style_frame.path`,
+- approved character/style locks require non-empty traits/rules and forbidden-change lists,
+- every scene from `proposal` onward must match the canonical IDs and reference paths and must declare explicit lock/allowed/forbidden change lists.
 
 The exact schema may evolve only through an explicit repository change with tests and documentation. Do not invent incompatible per-project formats ad hoc.
 
