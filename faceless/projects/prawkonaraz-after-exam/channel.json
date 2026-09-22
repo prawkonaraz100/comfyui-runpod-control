@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "channel_id": "prawkonaraz-faceless",
+  "visual_identity": {
+    "style_prompt": "Clean faceless editorial explainer on a bright white background, warm yellow #efc54f accents, dark navy/charcoal typography and outlines, soft grey supporting shapes, restrained green only for positive status, soft dimensional shading, simple system icons, minimal readable backgrounds.",
+    "style_frame": {
+      "status": "pending",
+      "path": null
+    }
+  },
+  "voice": {
+    "provider": "unassigned",
+    "voice_id": null,
+    "tone": "clear, friendly, practical, educational"
+  },
+  "defaults": {
+    "aspect_ratio": "9:16",
+    "target_duration_seconds": 30
+  }
+}

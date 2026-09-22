@@ -56,3 +56,6 @@ jobs:
 
       - name: Validate style-frame demo
         run: python scripts/faceless_validate.py faceless/projects/style-frame-demo
+
+      - name: Validate PrawkoNaRaz production project
+        run: python scripts/faceless_validate.py faceless/projects/prawkonaraz-after-exam

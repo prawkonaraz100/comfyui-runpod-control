@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "request_type": "style_frame",
+  "project_id": "after-passed-driving-exam-001",
+  "status": "pending",
+  "prompt": "Create one representative 9:16 style frame for a Polish faceless driving explainer. Use a bright white background, warm yellow #efc54f accents, dark navy/charcoal, soft grey, restrained green only for positive status, a faceless young driver with short wavy brown hair, dark graphite overshirt, white t-shirt, black trousers and black backpack, plus simple system icons and a minimal professional environment.",
+  "aspect_ratio": "9:16",
+  "output_path": "assets/style/style-frame-v1.png"
+}
