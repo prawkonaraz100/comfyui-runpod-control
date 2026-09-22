@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "project_id": "demo-episode-001",
+  "character_lock": {
+    "status": "approved",
+    "character_id": "driver-01",
+    "canonical_reference": "assets/characters/driver-01.png",
+    "character_sheet": "assets/characters/driver-01-sheet.png",
+    "locked_traits": {
+      "faceless": true,
+      "hair": "short wavy brown hair",
+      "outerwear": "dark grey overshirt jacket",
+      "shirt": "white t-shirt",
+      "trousers": "black trousers",
+      "shoes": "white sneakers",
+      "backpack": "black backpack"
+    },
+    "forbidden_changes": [
+      "facial features",
+      "hair restyle",
+      "wardrobe replacement",
+      "body-proportion drift"
+    ]
+  },
+  "style_lock": {
+    "status": "approved",
+    "style_id": "channel-style-v1",
+    "canonical_reference": "assets/style/style-frame-v1.png",
+    "rules": {
+      "palette": "white, warm yellow, dark navy/charcoal, soft grey; green only for positive status",
+      "rendering": "clean faceless editorial illustration with soft dimensional shading",
+      "background_density": "minimal and readable",
+      "icon_language": "simple system icons",
+      "typography": "deterministic overlays preferred over baked AI text"
+    },
+    "forbidden_changes": [
+      "different illustration language",
+      "unapproved palette shift",
+      "photorealistic rendering",
+      "dense decorative clutter"
+    ]
+  }
+}

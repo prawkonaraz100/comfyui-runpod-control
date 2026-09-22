@@ -8,6 +8,32 @@
       "duration_seconds": 5,
       "narration": "Hook placeholder.",
       "visual_prompt": "Opening visual beat placeholder.",
+      "character_id": "driver-01",
+      "style_id": "channel-style-v1",
+      "references": {
+        "character": "assets/characters/driver-01.png",
+        "style": "assets/style/style-frame-v1.png"
+      },
+      "locked_traits": [
+        "faceless appearance",
+        "short wavy brown hair",
+        "dark grey overshirt jacket",
+        "white t-shirt",
+        "black trousers",
+        "black backpack"
+      ],
+      "allowed_changes": [
+        "pose",
+        "camera framing",
+        "location",
+        "scene props"
+      ],
+      "forbidden_changes": [
+        "new face",
+        "new haircut",
+        "new wardrobe",
+        "different illustration style"
+      ],
       "status": "planned",
       "assets": {
         "still": null,
@@ -20,6 +46,32 @@
       "duration_seconds": 5,
       "narration": "Context placeholder.",
       "visual_prompt": "Context visual beat placeholder.",
+      "character_id": "driver-01",
+      "style_id": "channel-style-v1",
+      "references": {
+        "character": "assets/characters/driver-01.png",
+        "style": "assets/style/style-frame-v1.png"
+      },
+      "locked_traits": [
+        "faceless appearance",
+        "short wavy brown hair",
+        "dark grey overshirt jacket",
+        "white t-shirt",
+        "black trousers",
+        "black backpack"
+      ],
+      "allowed_changes": [
+        "pose",
+        "camera framing",
+        "location",
+        "scene props"
+      ],
+      "forbidden_changes": [
+        "new face",
+        "new haircut",
+        "new wardrobe",
+        "different illustration style"
+      ],
       "status": "planned",
       "assets": {
         "still": null,
@@ -32,6 +84,32 @@
       "duration_seconds": 5,
       "narration": "Development placeholder.",
       "visual_prompt": "Development visual beat placeholder.",
+      "character_id": "driver-01",
+      "style_id": "channel-style-v1",
+      "references": {
+        "character": "assets/characters/driver-01.png",
+        "style": "assets/style/style-frame-v1.png"
+      },
+      "locked_traits": [
+        "faceless appearance",
+        "short wavy brown hair",
+        "dark grey overshirt jacket",
+        "white t-shirt",
+        "black trousers",
+        "black backpack"
+      ],
+      "allowed_changes": [
+        "pose",
+        "camera framing",
+        "location",
+        "scene props"
+      ],
+      "forbidden_changes": [
+        "new face",
+        "new haircut",
+        "new wardrobe",
+        "different illustration style"
+      ],
       "status": "planned",
       "assets": {
         "still": null,
@@ -44,6 +122,32 @@
       "duration_seconds": 5,
       "narration": "Example placeholder.",
       "visual_prompt": "Example visual beat placeholder.",
+      "character_id": "driver-01",
+      "style_id": "channel-style-v1",
+      "references": {
+        "character": "assets/characters/driver-01.png",
+        "style": "assets/style/style-frame-v1.png"
+      },
+      "locked_traits": [
+        "faceless appearance",
+        "short wavy brown hair",
+        "dark grey overshirt jacket",
+        "white t-shirt",
+        "black trousers",
+        "black backpack"
+      ],
+      "allowed_changes": [
+        "pose",
+        "camera framing",
+        "location",
+        "scene props"
+      ],
+      "forbidden_changes": [
+        "new face",
+        "new haircut",
+        "new wardrobe",
+        "different illustration style"
+      ],
       "status": "planned",
       "assets": {
         "still": null,
@@ -56,6 +160,32 @@
       "duration_seconds": 5,
       "narration": "Resolution placeholder.",
       "visual_prompt": "Resolution visual beat placeholder.",
+      "character_id": "driver-01",
+      "style_id": "channel-style-v1",
+      "references": {
+        "character": "assets/characters/driver-01.png",
+        "style": "assets/style/style-frame-v1.png"
+      },
+      "locked_traits": [
+        "faceless appearance",
+        "short wavy brown hair",
+        "dark grey overshirt jacket",
+        "white t-shirt",
+        "black trousers",
+        "black backpack"
+      ],
+      "allowed_changes": [
+        "pose",
+        "camera framing",
+        "location",
+        "scene props"
+      ],
+      "forbidden_changes": [
+        "new face",
+        "new haircut",
+        "new wardrobe",
+        "different illustration style"
+      ],
       "status": "planned",
       "assets": {
         "still": null,
@@ -68,6 +198,32 @@
       "duration_seconds": 5,
       "narration": "Closing placeholder.",
       "visual_prompt": "Closing visual beat placeholder.",
+      "character_id": "driver-01",
+      "style_id": "channel-style-v1",
+      "references": {
+        "character": "assets/characters/driver-01.png",
+        "style": "assets/style/style-frame-v1.png"
+      },
+      "locked_traits": [
+        "faceless appearance",
+        "short wavy brown hair",
+        "dark grey overshirt jacket",
+        "white t-shirt",
+        "black trousers",
+        "black backpack"
+      ],
+      "allowed_changes": [
+        "pose",
+        "camera framing",
+        "location",
+        "scene props"
+      ],
+      "forbidden_changes": [
+        "new face",
+        "new haircut",
+        "new wardrobe",
+        "different illustration style"
+      ],
       "status": "planned",
       "assets": {
         "still": null,

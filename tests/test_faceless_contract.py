@@ -37,7 +37,7 @@ class FacelessContractTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn("stage=proposal", result.stdout)
 
-    def test_style_frame_stage_is_valid_without_scenes(self) -> None:
+    def test_style_frame_stage_is_valid_without_scenes_or_continuity(self) -> None:
         result = self.run_validator(STYLE_FRAME_FIXTURE)
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn("stage=style_frame", result.stdout)
@@ -88,6 +88,49 @@ class FacelessContractTests(unittest.TestCase):
         result = self.run_validator(project_dir)
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("aspect_ratio", result.stderr)
+
+    def test_proposal_stage_requires_continuity_manifest(self) -> None:
+        project_dir = self.copy_fixture()
+        (project_dir / "continuity.json").unlink()
+
+        result = self.run_validator(project_dir)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("continuity.json", result.stderr)
+
+    def test_approved_style_lock_must_match_channel_style_frame(self) -> None:
+        project_dir = self.copy_fixture()
+        continuity_path = project_dir / "continuity.json"
+        continuity = json.loads(continuity_path.read_text(encoding="utf-8"))
+        continuity["style_lock"]["canonical_reference"] = "assets/style/other-style.png"
+        continuity_path.write_text(
+            json.dumps(continuity, indent=2) + "\n", encoding="utf-8"
+        )
+
+        result = self.run_validator(project_dir)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("must match channel.visual_identity.style_frame.path", result.stderr)
+
+    def test_scene_character_reference_must_match_canonical_lock(self) -> None:
+        project_dir = self.copy_fixture()
+        scenes_path = project_dir / "scenes.json"
+        scenes = json.loads(scenes_path.read_text(encoding="utf-8"))
+        scenes["scenes"][0]["references"]["character"] = "assets/characters/other.png"
+        scenes_path.write_text(json.dumps(scenes, indent=2) + "\n", encoding="utf-8")
+
+        result = self.run_validator(project_dir)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("canonical character reference", result.stderr)
+
+    def test_scene_requires_explicit_lock_lists(self) -> None:
+        project_dir = self.copy_fixture()
+        scenes_path = project_dir / "scenes.json"
+        scenes = json.loads(scenes_path.read_text(encoding="utf-8"))
+        scenes["scenes"][0].pop("forbidden_changes")
+        scenes_path.write_text(json.dumps(scenes, indent=2) + "\n", encoding="utf-8")
+
+        result = self.run_validator(project_dir)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("forbidden_changes", result.stderr)
 
 
 if __name__ == "__main__":

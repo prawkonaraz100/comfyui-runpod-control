@@ -5,7 +5,7 @@
     "style_prompt": "Clean editorial faceless explainer with restrained geometry and consistent visual language.",
     "style_frame": {
       "status": "approved",
-      "path": "assets/style-frame.png"
+      "path": "assets/style/style-frame-v1.png"
     }
   },
   "voice": {
