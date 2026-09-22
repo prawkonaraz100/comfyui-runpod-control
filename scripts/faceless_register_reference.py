@@ -37,7 +37,8 @@ def write_json(path: Path, data: dict[str, Any]) -> None:
 
 
 def detect_image_type(path: Path) -> str:
-    header = path.read_bytes()[:16]
+    with path.open("rb") as handle:
+        header = handle.read(16)
     if header.startswith(b"\x89PNG\r\n\x1a\n"):
         return "png"
     if header.startswith(b"\xff\xd8\xff"):
