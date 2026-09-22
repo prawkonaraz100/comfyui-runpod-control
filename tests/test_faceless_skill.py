@@ -52,6 +52,14 @@ class FacelessVideoDirectorSkillTests(unittest.TestCase):
         self.assertNotIn("driver_01", text)
         self.assertNotIn("channel_style_v1", text)
 
+    def test_skill_documents_reference_registration_workflow(self) -> None:
+        text = SKILL.read_text(encoding="utf-8")
+        self.assertIn("scripts/faceless_register_reference.py", text)
+        self.assertIn("--kind style-frame", text)
+        self.assertIn("--kind character-sheet", text)
+        self.assertIn("--kind character", text)
+        self.assertIn("a character sheet is supplemental", text)
+
     def test_skill_preserves_script_writer_source(self) -> None:
         text = REFERENCE.read_text(encoding="utf-8")
         self.assertIn("# Faceless Script Writer", text)

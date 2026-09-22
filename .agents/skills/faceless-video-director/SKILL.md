@@ -170,6 +170,39 @@ forbidden_changes:
 
 For PrawkoNaRaz work, the project may intentionally use the house brand. The source script-writer rule against brand names does not prohibit the user's own approved brand identity.
 
+### Persist canonical references in the project
+
+For the current production project, use `scripts/faceless_register_reference.py` rather than manually copying files and editing multiple manifests independently.
+
+Examples:
+
+```bash
+python scripts/faceless_register_reference.py \
+  faceless/projects/prawkonaraz-after-exam \
+  --source /path/to/approved-style-frame.png \
+  --kind style-frame \
+  --approve
+
+python scripts/faceless_register_reference.py \
+  faceless/projects/prawkonaraz-after-exam \
+  --source /path/to/approved-character-sheet.png \
+  --kind character-sheet
+
+python scripts/faceless_register_reference.py \
+  faceless/projects/prawkonaraz-after-exam \
+  --source /path/to/canonical-character.png \
+  --kind character \
+  --approve
+```
+
+Registration rules:
+- `--approve` must reflect an explicit user approval; never infer approval from generation success,
+- style approval updates the channel style-frame state, project approval, style lock, and style-frame request together,
+- canonical-character approval is rejected until the style frame is approved,
+- a character sheet is supplemental and cannot approve the canonical character lock,
+- existing canonical destinations are not overwritten unless `--replace` is explicitly supplied,
+- after registration, run `python scripts/faceless_validate.py <project-dir>` before advancing the workflow stage.
+
 ### 6. Build scene manifests
 
 Every scene must reference the canonical locks explicitly.

@@ -8,18 +8,16 @@ on:
     paths:
       - "faceless/**"
       - ".agents/skills/faceless-video-director/**"
-      - "scripts/faceless_validate.py"
-      - "tests/test_faceless_contract.py"
-      - "tests/test_faceless_skill.py"
+      - "scripts/faceless_*.py"
+      - "tests/test_faceless_*.py"
       - "docs/FACELESS_WORKFLOW_V1.md"
       - ".github/workflows/faceless-quality.yml"
   pull_request:
     paths:
       - "faceless/**"
       - ".agents/skills/faceless-video-director/**"
-      - "scripts/faceless_validate.py"
-      - "tests/test_faceless_contract.py"
-      - "tests/test_faceless_skill.py"
+      - "scripts/faceless_*.py"
+      - "tests/test_faceless_*.py"
       - "docs/FACELESS_WORKFLOW_V1.md"
       - ".github/workflows/faceless-quality.yml"
 
